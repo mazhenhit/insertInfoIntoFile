@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "readFileInfo.h"
 
-INT32 readFileInfo(char *fileName, ListNode **pHead)
+#include "list.h"
+#include "appCmn.h"
+
+ListNode *readFileInfo(ListNode *pHead, char *fileName)
 {
 	FILE *fd;
 	char *line = NULL;
@@ -12,25 +14,27 @@ INT32 readFileInfo(char *fileName, ListNode **pHead)
 
 	if((fd = fopen(fileName, "r")) == NULL)
 	{
-		return FAILURE;
+		printf("error: fopen\n");
+		return NULL;
 	}
+
+	printf("Open file success...\n");
 
 	while((read = getline(&line, &len, fd)) != -1)
 	{
-		addToTailFile(**pHead, line);
+		pHead = addToTail(pHead, line);
 	}
 
 	if(line)
 		free(line);
 
-	pTemp = *pHead;
+	pTemp = pHead;
 	while(pTemp != NULL)
 	{
 		printf("%s", pTemp->content);
 		pTemp = pTemp->pNext;
 	}
 
-	return SUCCESS;
+	return pHead;
 }
-
 
